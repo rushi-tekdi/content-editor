@@ -25,6 +25,7 @@ export default defineConfig({
     alias: {
       '@editor/editor-core': resolve(__dirname, '../editor-core/src/index.ts'),
       '@editor/editor-content': resolve(__dirname, '../editor-content/src/index.ts'),
+      '@editor/editor-course': resolve(__dirname, '../editor-course/src/index.ts'),
     },
   },
 });

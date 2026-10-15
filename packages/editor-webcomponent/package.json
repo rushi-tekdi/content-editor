@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@editor/editor-core": "0.1.0",
-    "@editor/editor-content": "0.1.0"
+    "@editor/editor-content": "0.1.0",
+    "@editor/editor-course": "0.1.0"
   }
 }

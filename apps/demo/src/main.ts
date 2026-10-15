@@ -46,16 +46,81 @@ const defaultConfig: EditorWrapperConfig = {
   },
 };
 
+// Course preset per docs/CONFIGURATION.md ("2. Course") from the legacy
+// sunbird-collection-editor repo — primaryCategory: "Course", 2-level
+// Chapter/Sub-Chapter hierarchy. `options.apiBaseUrl` is left blank here;
+// set it to a real (or dev-proxy) Sunbird backend to exercise API calls.
+const courseConfig: EditorWrapperConfig = {
+  editorType: 'course',
+  data: {
+    context: {
+      env: 'collection_editor',
+      sid: 'demo-session-id',
+      did: 'demo-device-id',
+      uid: 'demo-user-id',
+      channel: 'demo-channel',
+      pdata: { id: 'local.sunbird.portal', ver: '1.0.0', pid: 'sunbird-portal' },
+      contextRollup: {},
+      tags: [],
+      framework: 'demo-framework',
+      user: { id: 'demo-user-id', fullName: 'Demo User' },
+    },
+    config: {
+      mode: 'edit',
+      maxDepth: 2,
+      objectType: 'Collection',
+      primaryCategory: 'Course',
+      isRoot: true,
+      iconClass: 'fa fa-book',
+      children: {},
+      hierarchy: {
+        level1: {
+          name: 'Chapter',
+          type: 'unit',
+          mimeType: 'application/vnd.ekstep.content-collection',
+          contentType: 'Course Unit',
+          iconClass: 'fa fa-folder-o',
+          children: {},
+        },
+        level2: {
+          name: 'Sub-Chapter',
+          type: 'unit',
+          mimeType: 'application/vnd.ekstep.content-collection',
+          contentType: 'Course Unit',
+          iconClass: 'fa fa-folder-o',
+          children: {
+            Content: ['Explanation Content', 'Learning Resource', 'eTextbook', 'Teacher Resource', 'Course Assessment'],
+            QuestionSet: ['Practice Question Set'],
+          },
+        },
+      },
+    },
+  },
+  options: {
+    // apiBaseUrl: 'https://dev-lap.prathamdigital.org',
+  },
+  theme: {
+    primary: '#2980b9',
+    toolbar: '#f5f5f7',
+  },
+};
+
+const CONFIGS: Record<string, EditorWrapperConfig> = {
+  content: defaultConfig,
+  course: courseConfig,
+};
+
 const editorEl = document.getElementById('editor') as HTMLElement & {
   editorConfig: EditorWrapperConfig;
   getData: () => unknown;
 };
 
-const eventLog     = document.getElementById('event-log') as HTMLPreElement;
-const loadBtn      = document.getElementById('load-btn') as HTMLButtonElement;
-const clearBtn     = document.getElementById('clear-btn') as HTMLButtonElement;
-const logDataBtn   = document.getElementById('log-data-btn') as HTMLButtonElement;
-const configEditor = document.getElementById('config-editor') as HTMLTextAreaElement;
+const eventLog         = document.getElementById('event-log') as HTMLPreElement;
+const loadBtn          = document.getElementById('load-btn') as HTMLButtonElement;
+const clearBtn         = document.getElementById('clear-btn') as HTMLButtonElement;
+const logDataBtn       = document.getElementById('log-data-btn') as HTMLButtonElement;
+const configEditor     = document.getElementById('config-editor') as HTMLTextAreaElement;
+const editorTypeSelect = document.getElementById('editor-type-select') as HTMLSelectElement;
 
 function logEvent(name: string, detail: unknown): void {
   const ts   = new Date().toLocaleTimeString();
@@ -87,6 +152,14 @@ clearBtn.addEventListener('click', () => {
 
 logDataBtn.addEventListener('click', () => {
   logEvent('>>> current data', editorEl.getData());
+});
+
+editorTypeSelect.addEventListener('change', () => {
+  const cfg = CONFIGS[editorTypeSelect.value];
+  if (!cfg) return;
+  configEditor.value = JSON.stringify(cfg, null, 2);
+  editorEl.editorConfig = cfg;
+  logEvent('>>> editor type switched', { editorType: cfg.editorType });
 });
 
 // Pre-fill editor and auto-load on startup

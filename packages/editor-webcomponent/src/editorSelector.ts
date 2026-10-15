@@ -1,5 +1,6 @@
 import type { EditorPluginInterface } from '@editor/editor-core';
 import { ContentEditor } from '@editor/editor-content';
+import { CourseEditor } from '@editor/editor-course';
 
 /**
  * Composition point: maps an editorType discriminant to its plugin package.
@@ -7,5 +8,6 @@ import { ContentEditor } from '@editor/editor-content';
  */
 export function editorSelector(editorType: string): EditorPluginInterface | null {
   if (editorType === 'content') return new ContentEditor();
+  if (editorType === 'course') return new CourseEditor();
   return null;
 }
