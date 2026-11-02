@@ -59,7 +59,7 @@ export async function searchShells(config: ShellManageConfig, params: ShellSearc
 }
 
 /** Course statuses that count as "using" a shell — for the course count, edit lock and courses popup. */
-const COURSE_STATUSES = ['Live', 'Draft'];
+const COURSE_STATUSES = ['Live', 'Draft', 'Review', 'FlagReview', 'Processing'];
 
 /** Live and Draft courses built on a shell (paged). */
 export async function searchShellCourses(
